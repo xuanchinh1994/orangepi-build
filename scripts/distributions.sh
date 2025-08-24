@@ -14,9 +14,95 @@
 # install_distribution_specific
 # post_debootstrap_tweaks
 
+install_voyd()
+{
+	display_alert "=====> Installing VOYD software"
+	# chroot "${SDCARD}" /bin/bash -c "add-apt-repository -y ppa:mozillateam/ppa"
+	# chroot "${SDCARD}" /bin/bash -c "snap install firefox"
+	# chroot "${SDCARD}" /bin/bash -c "add-apt-repository -y ppa:xtradeb/apps"
+	chroot "${SDCARD}" /bin/bash -c "add-apt-repository ppa:saiarcot895/chromium-beta"
+	chroot "${SDCARD}" /bin/bash -c "apt-get -y install unclutter sqlite3 python3-dev python3-pip chromium-browser"
+	# chroot "${SDCARD}" /bin/bash -c "apt-get -y install dnsmasq unclutter sqlite3 hostapd python3-dev python3-pip firefox-esr"
+	# chroot "${SDCARD}" /bin/bash -c "apt-get -y install dnsmasq hostapd python3-dev python3-pip chromium-browser"
+	# chroot "${SDCARD}" /bin/bash -c "pip3 install build"
+	chroot "${SDCARD}" /bin/bash -c "pip3 install flask numpy spidev OPi.GPIO-PicoPlanetDev==0.5.4"
+	
+	
 
+	display_alert "=====> Installing Led strip depency"
+	echo "overlays=i2c3" >> "${SDCARD}"/boot/orangepiEnv.txt
+	echo "param_spidev_spi_bus=1" >> "${SDCARD}"/boot/orangepiEnv.txt
+	echo "param_spidev_max_freq=100000000" >> "${SDCARD}"/boot/orangepiEnv.txt
+	cat <<-EOF >  "${SDCARD}"/etc/udev/rules.d/50-spi.rules
+	SUBSYSTEM=="spidev", GROUP="spiuser", MODE="0660"
+	EOF
+	display_alert "======> Installing VOYD controller"
+	cp -avr "$USERPATCHES_PATH"/voyd_src/autostart/* "${SDCARD}"/home/voyd/.config/autostart/
+	cp -avr "$USERPATCHES_PATH"/voyd_src/sudoers "${SDCARD}"/etc/
+	# chroot "${SDCARD}" /bin/bash -c "chown -R root:root /home/voyd/.config/autostart/*"
+	chroot "${SDCARD}" /bin/bash -c "chown -R root:root /etc/sudoers"
+	chroot "${SDCARD}" /bin/bash -c "groupadd spiuser"
+	chroot "${SDCARD}" /bin/bash -c "adduser voyd spiuser"
+	chroot "${SDCARD}" /bin/bash -c "chmod -R 777 /home/voyd/.config/autostart/"
+	# apt-get install dnsmasq hostapd python3-pip python3-dev
+	# pip3 install build
+	display_alert "======> Creating VOYD setting files in BOOT partition"
+	touch "${SDCARD}"/boot/url.txt
+	echo "" >> "${SDCARD}"/boot/url.txt
+	touch "${SDCARD}"/boot/num_led.txt 
+	echo "10" >> "${SDCARD}"/boot/num_led.txt 
+	touch "${SDCARD}"/boot/led_color.txt 
+	echo "W" >> "${SDCARD}"/boot/led_color.txt 
+	cat <<-EOF > "${SDCARD}"/lib/systemd/system/serial-getty@.service.d/override.conf
+[Service]
+ExecStartPre=/bin/sh -c 'exec /bin/sleep 10'
+ExecStart=-/sbin/agetty --noissue %I \$TERM
+Type=idle
+	EOF
+		cat <<-EOF > "${SDCARD}"/lib/systemd/system/getty@.service.d/override.conf
+[Service]
+ExecStartPre=/bin/sh -c 'exec /bin/sleep 10'
+ExecStart=-/sbin/agetty --noissue %I \$TERM
+Type=idle
+	EOF
+	# display_alert "===> Tweaking GNOME"
+	# chroot "${SDCARD}" /bin/bash -c "systemctl disable libvirtd abrtd"
+	# chroot "${SDCARD}" /bin/bash -c "systemctl mask packagekit"
+	# chroot "${SDCARD}" /bin/bash -c "systemctl --user mask evolution-addressbook-factory evolution-calendar-factory evolution-source-registry tracker-miner-apps tracker-miner-fs tracker-store"
+	# chroot "${SDCARD}" /bin/bash -c "sudo apt purge gnome-software -y"
+	display_alert "======> Disabling Update Manager"
+	chroot "${SDCARD}" /bin/bash -c "apt-get remove update-manager -y"
+}
 
-
+# display_alert "===> Creating VOYD url file"
+# 	touch "${SDCARD}"/boot/url.txt
+# 	echo "https://ottawa.weatherstats.ca/" >> "${SDCARD}"/boot/url.txt
+# 	display_alert "===> Creating Launcher & Autologin file"
+# 	touch "${SDCARD}"/home/voyd/.config/autostart/launcher.desktop
+# 	chmod 777 "${SDCARD}"/home/voyd/.config/autostart/launcher.desktop
+# 	cat <<-EOF > "${SDCARD}"/home/voyd/.config/autostart/launcher.desktop
+# [Desktop Entry]
+# Type=Application
+# Encoding=UTF-8
+# Name=launcher
+# Exec=/home/voyd/.config/autostart/launcher.sh
+# Terminal=false
+# 	EOF
+# 	touch "${SDCARD}"/home/voyd/.config/autostart/launcher.sh
+# 	chmod a+x "${SDCARD}"/home/voyd/.config/autostart/launcher.sh
+# 	cat <<-EOF > "${SDCARD}"/home/voyd/.config/autostart/launcher.sh
+# DISPLAY=:0 xset s noblank
+# read URL < /boot/url.txt
+# echo \$URL
+# echo "Waiting for internet"
+# while ! ping -c 1 -W 1 google.com; do
+# 	echo "Waiting for 1.2.3.4 - network interface might be down..."
+# 	sleep 1
+# done
+# echo "Active Internet Available"
+# #chromium-browser --ignore-certificate-errors --kiosk --incognito "\$URL"
+# firefox-esr -kiosk -private-window "\$URL"
+# 	EOF
 install_common()
 {
 	display_alert "Applying common tweaks" "" "info"

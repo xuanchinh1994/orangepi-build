@@ -63,6 +63,8 @@ PRE_INSTALL_DISTRIBUTION_SPECIFIC
 		install_distribution_specific
 		install_common
 
+		install_voyd
+
 		# install locally built packages or install pre-built packages from orangepi
 		[[ $EXTERNAL_NEW == compile || $EXTERNAL_NEW == prebuilt ]] && chroot_installpackages_local
 
@@ -818,11 +820,12 @@ create_image()
 		IMAGE_TYPE=desktop
 	fi
 
-	local version="${BOARD^}_${REVISION}_${DISTRIBUTION,}_${RELEASE}_${IMAGE_TYPE}"${DESKTOP_ENVIRONMENT:+_$DESKTOP_ENVIRONMENT}"_linux$(grab_version "$LINUXSOURCEDIR")"
+	# local version="${BOARD^}_${REVISION}_${DISTRIBUTION,}_${RELEASE}_${IMAGE_TYPE}"${DESKTOP_ENVIRONMENT:+_$DESKTOP_ENVIRONMENT}"_linux$(grab_version "$LINUXSOURCEDIR")"
+	local version="${BOARD^}_${RELEASE}_custom_$(date +%Y%m%d)"
 
-	if [[ ${RELEASE} == "raspi" ]]; then
-		local version="${BOARD^}_${REVISION}_raspios_bullseye_${IMAGE_TYPE}"${DESKTOP_ENVIRONMENT:+_$DESKTOP_ENVIRONMENT}"_linux$(grab_version "$LINUXSOURCEDIR")"
-	fi
+	# if [[ ${RELEASE} == "raspi" ]]; then
+	# 	local version="${BOARD^}_${REVISION}_raspios_bullseye_${IMAGE_TYPE}"${DESKTOP_ENVIRONMENT:+_$DESKTOP_ENVIRONMENT}"_linux$(grab_version "$LINUXSOURCEDIR")"
+	# fi
 
 	[[ $ROOTFS_TYPE == nfs ]] && version=${version}_nfsboot
 
