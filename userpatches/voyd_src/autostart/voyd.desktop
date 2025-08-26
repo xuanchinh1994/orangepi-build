@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Encoding=UTF-8
+Name=launcher
+Exec=/home/voyd/.config/autostart/voyd.sh >/dev/null &
+Terminal=false

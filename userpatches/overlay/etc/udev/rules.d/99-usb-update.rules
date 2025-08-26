@@ -1,0 +1,5 @@
+# Udev rule to trigger update script when a USB storage partition is added
+
+ACTION=="add", SUBSYSTEM=="block", KERNEL=="sd[a-z][0-9]*", ENV{ID_BUS}=="usb"
+
+RUN+="/home/voyd/.config/autostart/usb_update_udev.sh %k"

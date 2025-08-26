@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Encoding=UTF-8
+Name=launcher
+Exec=/home/voyd/.config/autostart/ble.sh >/dev/null &
+Terminal=false

@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Encoding=UTF-8
+Name=Test LCD Serial and File Logger
+Exec=sh -c '/usr/bin/python3 /home/voyd/.config/autostart/test_lcd.py | tee /tmp/test_lcd.log > /dev/ttyS1'
+Terminal=false

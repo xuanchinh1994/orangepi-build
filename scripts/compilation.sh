@@ -741,20 +741,20 @@ compile_plymouth-theme-orangepi()
 		"${tmp_dir}/${plymouth_theme_orangepi_dir}"/DEBIAN/
 	chmod 755 "${tmp_dir}/${plymouth_theme_orangepi_dir}"/DEBIAN/{postinst,prerm,postrm}
 
-	#convert -resize 256x256 \
-	#	"${EXTER}"/packages/plymouth-theme-orangepi/orangepi-logo.png \
-	#	"${tmp_dir}/${plymouth_theme_orangepi_dir}"/usr/share/plymouth/themes/orangepi/bgrt-fallback.png
+	convert -resize 256x256 \
+		"${EXTER}"/packages/plymouth-theme-orangepi/orangepi-logo.png \
+		"${tmp_dir}/${plymouth_theme_orangepi_dir}"/usr/share/plymouth/themes/orangepi/bgrt-fallback.png
 
-	# convert -resize 52x52 \
-	#       "${EXTER}"/packages/plymouth-theme-orangepi/spinner.gif \
-	#       "${tmp_dir}/${plymouth_theme_orangepi_dir}"/usr/share/plymouth/themes/orangepi/animation-%04d.png
+	convert -resize 52x52 \
+	      "${EXTER}"/packages/plymouth-theme-orangepi/spinner.gif \
+	      "${tmp_dir}/${plymouth_theme_orangepi_dir}"/usr/share/plymouth/themes/orangepi/animation-%04d.png
 
 	convert -resize 52x52 \
 		"${EXTER}"/packages/plymouth-theme-orangepi/spinner.gif \
 		"${tmp_dir}/${plymouth_theme_orangepi_dir}"/usr/share/plymouth/themes/orangepi/throbber-%04d.png
 
-	cp "${EXTER}"/packages/plymouth-theme-orangepi/watermark.png \
-		"${tmp_dir}/${plymouth_theme_orangepi_dir}"/usr/share/plymouth/themes/orangepi/
+	# cp "${EXTER}"/packages/plymouth-theme-orangepi/watermark.png \
+	# 	"${tmp_dir}/${plymouth_theme_orangepi_dir}"/usr/share/plymouth/themes/orangepi/
 
 	cp "${EXTER}"/packages/plymouth-theme-orangepi/{bullet,capslock,entry,keyboard,keymap-render,lock}.png \
 		"${tmp_dir}/${plymouth_theme_orangepi_dir}"/usr/share/plymouth/themes/orangepi/

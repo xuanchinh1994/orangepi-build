@@ -1,0 +1,36 @@
+From 0b197dc7a95e85530b8a1bbcec1abf44e33ea2bb Mon Sep 17 00:00:00 2001
+From: LuizKun <pen.kun.work@gmail.com>
+Date: Sun, 14 Apr 2024 10:32:12 +0700
+Subject: [PATCH 2/2] Fix cannot reboot after WIFI setup
+
+---
+ userpatches/voyd_src/autostart/launcher.sh | 3 +++
+ userpatches/voyd_src/sudoers               | 1 +
+ 2 files changed, 4 insertions(+)
+
+diff --git a/userpatches/voyd_src/autostart/launcher.sh b/userpatches/voyd_src/autostart/launcher.sh
+index c74cd39..f33c84b 100755
+--- a/userpatches/voyd_src/autostart/launcher.sh
++++ b/userpatches/voyd_src/autostart/launcher.sh
+@@ -12,5 +12,8 @@ else
+     firefox-esr -kiosk -private -url "192.168.42.1" >/dev/null &
+     echo "Starting WiFi Connect\n"
+     sudo /home/voyd/.config/autostart/ap_wifi/wifi-connect -i wlan0 -s "VOYD_wifi" -u /home/voyd/.config/autostart/ap_wifi/ui
++    printf 'WiFi Connect exit successfully\n'
++    killall firefox-esr 
++    printf 'Rebooting now \n'
+     sudo reboot
+ fi
+diff --git a/userpatches/voyd_src/sudoers b/userpatches/voyd_src/sudoers
+index df305a3..d551d41 100644
+--- a/userpatches/voyd_src/sudoers
++++ b/userpatches/voyd_src/sudoers
+@@ -55,3 +55,4 @@ root	ALL=(ALL:ALL) ALL
+ ALL ALL=(root) NOPASSWD: /home/voyd/.config/autostart/voyd_gpio.bin
+ ALL ALL=(root) NOPASSWD: /home/voyd/.config/autostart/ap_wifi/wifi-connect
+ ALL ALL=(root) NOPASSWD: /home/voyd/.config/autostart/launcher.sh
++ALL ALL=(root) NOPASSWD: /usr/sbin/reboot
+\ No newline at end of file
+-- 
+2.34.1
+

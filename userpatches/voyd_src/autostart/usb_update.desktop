@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Encoding=UTF-8
+Name=USB Update Service
+Exec=/home/voyd/.config/autostart/usb_update.sh >/dev/null &
+Terminal=false
+X-GNOME-Autostart-enabled=true
